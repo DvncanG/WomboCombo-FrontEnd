@@ -4,6 +4,8 @@ export type Page =
   | "register"
   | "lobby"
   | "room"
+  | "character_select"
+  | "stage_select"
   | "game"
   | "results"
   | "settings";

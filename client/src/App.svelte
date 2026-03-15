@@ -4,6 +4,8 @@
   import Register from "./ui/pages/Register.svelte";
   import Lobby from "./ui/pages/Lobby.svelte";
   import Room from "./ui/pages/Room.svelte";
+  import CharacterSelect from "./ui/pages/CharacterSelect.svelte";
+  import StageSelect from "./ui/pages/StageSelect.svelte";
   import GamePage from "./ui/pages/Game.svelte";
   import Results from "./ui/pages/Results.svelte";
   import Settings from "./ui/pages/Settings.svelte";
@@ -15,6 +17,8 @@
     register: Register,
     lobby: Lobby,
     room: Room,
+    character_select: CharacterSelect,
+    stage_select: StageSelect,
     game: GamePage,
     results: Results,
     settings: Settings,

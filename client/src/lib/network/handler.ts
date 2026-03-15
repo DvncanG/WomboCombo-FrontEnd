@@ -65,30 +65,9 @@ export function initMessageHandler(): () => void {
 
       // -- Game lifecycle --
       case "game_start":
-        gameStore.round = msg.round;
-        gameStore.phase = "playing";
-        router.navigate("game");
+        // Navigate to character select (online mode - isCPU stays false)
+        gameStore.phase = "character_select";
         gameSceneCallback?.(msg);
-        break;
-
-      case "round_start_countdown":
-        gameStore.countdownSeconds = msg.seconds;
-        gameStore.phase = "countdown";
-        gameSceneCallback?.(msg);
-        break;
-
-      case "round_end":
-        gameStore.phase = "shop";
-        gameSceneCallback?.(msg);
-        break;
-
-      case "shop_open":
-        gameStore.shopItems = msg.available_items;
-        gameStore.phase = "shop";
-        break;
-
-      case "buy_result":
-        gameStore.gold = msg.gold_left;
         break;
 
       case "game_over":
@@ -97,47 +76,19 @@ export function initMessageHandler(): () => void {
         router.navigate("results");
         break;
 
-      // -- Gameplay (forward to Phaser) --
+      // -- Gameplay (forward to Phaser scene) --
       case "game_state":
-        gameStore.timeLeft = msg.time_left;
-        gameStore.playerCount = msg.players.length;
-        // Update local player health from server state
-        if (gameStore.playerId) {
-          const me = msg.players.find((p) => p.id === gameStore.playerId);
-          if (me) {
-            gameStore.health = me.health;
-          }
-        }
-        gameSceneCallback?.(msg);
-        break;
-
       case "player_hit":
-        if (msg.player_id === gameStore.playerId) {
-          gameStore.health = msg.health;
-        }
-        gameSceneCallback?.(msg);
-        break;
-
       case "player_death":
-        if (msg.player_id === gameStore.playerId) {
-          gameStore.isLocalPlayerDead = true;
-          gameStore.phase = "dead";
-        }
-        gameSceneCallback?.(msg);
-        break;
-
       case "player_respawn":
-        if (msg.player_id === gameStore.playerId) {
-          gameStore.isLocalPlayerDead = false;
-          gameStore.phase = "playing";
-        }
-        gameSceneCallback?.(msg);
-        break;
-
       case "enemy_spawn":
       case "enemy_death":
       case "item_spawn":
       case "item_pickup":
+      case "round_start_countdown":
+      case "round_end":
+      case "shop_open":
+      case "buy_result":
         gameSceneCallback?.(msg);
         break;
     }

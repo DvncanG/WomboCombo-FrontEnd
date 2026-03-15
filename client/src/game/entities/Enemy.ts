@@ -36,7 +36,7 @@ export class Enemy {
     }
 
     this.sprite = scene.physics.add.sprite(x, y, texKey);
-    this.sprite.body!.allowGravity = false;
+    (this.sprite.body as Phaser.Physics.Arcade.Body).setAllowGravity(false);
   }
 
   updateFromServer(_state: EnemyState): void {

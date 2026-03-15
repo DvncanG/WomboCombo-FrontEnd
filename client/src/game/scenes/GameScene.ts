@@ -1,6 +1,6 @@
 import { Player } from "../entities/Player";
 import { InputManager } from "../systems/InputManager";
-import { PHYSICS, NETWORK } from "../config/physics";
+import { NETWORK } from "../config/physics";
 import { socket } from "../../lib/network/socket";
 import { gameStore } from "../../lib/stores/game.svelte";
 import {

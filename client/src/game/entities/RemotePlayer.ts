@@ -36,7 +36,7 @@ export class RemotePlayer {
     }
 
     this.sprite = scene.physics.add.sprite(x, y, "remote_placeholder");
-    this.sprite.body!.allowGravity = false;
+    (this.sprite.body as Phaser.Physics.Arcade.Body).setAllowGravity(false);
   }
 
   /** Push a new server snapshot into the interpolation buffer */
