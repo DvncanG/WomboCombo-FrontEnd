@@ -4,11 +4,16 @@
 
 <div class="flex flex-col items-center justify-center h-full gap-8">
   <div class="text-center">
-    <h1 class="text-7xl font-bold tracking-tight">
+    <h1 class="text-7xl font-black tracking-tight">
       WONBO
       <span class="text-red-500">KOMBO</span>
     </h1>
-    <p class="text-gray-400 text-lg mt-2">Platform Fighter</p>
+    <p class="text-gray-400 text-lg mt-2 tracking-wide">Platform Fighter</p>
+    <div class="flex gap-2 justify-center mt-3">
+      <span class="text-xs bg-red-600/20 text-red-400 px-2 py-0.5 rounded">3 STOCKS</span>
+      <span class="text-xs bg-yellow-600/20 text-yellow-400 px-2 py-0.5 rounded">SMASH ATTACKS</span>
+      <span class="text-xs bg-blue-600/20 text-blue-400 px-2 py-0.5 rounded">SHIELD + DODGE</span>
+    </div>
   </div>
 
   <div class="flex flex-col gap-3 w-72">
@@ -34,9 +39,19 @@
     </button>
   </div>
 
-  <div class="text-gray-600 text-xs mt-4 text-center space-y-0.5">
-    <p>P1: WASD + F (light) · G (heavy) · R (special)</p>
-    <p>P2: Arrows + J (light) · K (heavy) · L (special)</p>
-    <p class="text-gray-700 mt-1">W / UP / SPACE = salto &nbsp;|&nbsp; doble salto en el aire</p>
+  <div class="text-gray-500 text-xs mt-4 text-center space-y-1 max-w-md">
+    <p class="text-gray-400 font-bold mb-1.5">CONTROLS</p>
+    <div class="grid grid-cols-2 gap-x-6 gap-y-0.5">
+      <p><span class="text-gray-300">P1 Move</span> &mdash; WASD</p>
+      <p><span class="text-gray-300">P2 Move</span> &mdash; Arrows</p>
+      <p><span class="text-gray-300">P1 Attack</span> &mdash; F / G / R</p>
+      <p><span class="text-gray-300">P2 Attack</span> &mdash; J / K / L</p>
+      <p><span class="text-gray-300">P1 Shield</span> &mdash; E</p>
+      <p><span class="text-gray-300">P2 Shield</span> &mdash; I</p>
+      <p><span class="text-gray-300">P1 Up Atk</span> &mdash; W+F</p>
+      <p><span class="text-gray-300">P2 Up Atk</span> &mdash; Up+J</p>
+    </div>
+    <p class="text-gray-600 mt-2">Shield + direction = dodge roll | Air shield = air dodge</p>
+    <p class="text-gray-600">Hold G/K to charge smash attack | S/Down in air = fast fall</p>
   </div>
 </div>

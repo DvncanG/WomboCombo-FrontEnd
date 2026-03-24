@@ -211,13 +211,13 @@
           <div class="flex items-center gap-2">
             <span class="text-xs text-gray-500 w-12">PWR</span>
             <div class="flex-1 h-2 bg-gray-800 rounded-full overflow-hidden">
-              <div class="h-full bg-red-500 rounded-full" style="width: {statBar(config.attacks.heavy.damage, 25)}%"></div>
+              <div class="h-full bg-red-500 rounded-full" style="width: {statBar(config.attacks.heavy.damage, 28)}%"></div>
             </div>
           </div>
           <div class="flex items-center gap-2">
             <span class="text-xs text-gray-500 w-12">WGT</span>
             <div class="flex-1 h-2 bg-gray-800 rounded-full overflow-hidden">
-              <div class="h-full bg-blue-500 rounded-full" style="width: {statBar(config.weight, 1.5)}%"></div>
+              <div class="h-full bg-blue-500 rounded-full" style="width: {statBar(config.weight, 170)}%"></div>
             </div>
           </div>
         </div>
