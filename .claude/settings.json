@@ -1,9 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Read(//c/Users/julia/Desktop/WonboKombo-Front/**)",
-      "Bash(npx tsc:*)",
-      "Bash(npx vite:*)"
-    ]
-  }
-}
