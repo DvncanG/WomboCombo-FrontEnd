@@ -778,10 +778,49 @@
                     </table>
                 </div>
                 <div class="card">
-                    <h3>Diagrama de relaciones</h3>
-                    <div style="font-family:'Fira Code';font-size:12px;color:var(--muted);line-height:1.8;">
-                        <span style="color:#4ECDC4;">users</span> <span style="color:var(--primary);">1 ──── N</span> <span style="color:#4ECDC4;">room_players</span> <span style="color:var(--primary);">N ──── 1</span> <span style="color:#4ECDC4;">rooms</span><br>
-                        <span style="color:#4ECDC4;">users</span> <span style="color:var(--primary);">1 ──── N</span> <span style="color:#4ECDC4;">rooms</span> <span style="color:var(--muted);">(host_id)</span>
+                    <h3>Diagrama Entidad-Relacion</h3>
+                    <div style="display:flex;flex-direction:column;gap:14px;margin-top:8px;">
+                        <!-- Diagrama visual con cajas -->
+                        <div style="display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;">
+                            <div style="background:rgba(78,205,196,0.12);border:2px solid rgba(78,205,196,0.4);border-radius:10px;padding:10px 18px;text-align:center;">
+                                <div style="font-family:'Orbitron';font-size:13px;color:#4ECDC4;font-weight:700;">USERS</div>
+                                <div style="font-size:10px;color:var(--muted);margin-top:4px;">id (PK)<br>username<br>email</div>
+                            </div>
+                            <div style="display:flex;flex-direction:column;align-items:center;gap:2px;">
+                                <div style="font-family:'Fira Code';font-size:10px;color:var(--primary);">1 &mdash;&mdash; N</div>
+                                <div style="font-size:9px;color:var(--muted);">un usuario crea<br>muchas salas</div>
+                            </div>
+                            <div style="background:rgba(108,99,255,0.12);border:2px solid rgba(108,99,255,0.4);border-radius:10px;padding:10px 18px;text-align:center;">
+                                <div style="font-family:'Orbitron';font-size:13px;color:#6C63FF;font-weight:700;">ROOMS</div>
+                                <div style="font-size:10px;color:var(--muted);margin-top:4px;">id (PK)<br>code (UNIQUE)<br>host_id (FK)</div>
+                            </div>
+                        </div>
+                        <!-- Relacion N:M a traves de room_players -->
+                        <div style="display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;">
+                            <div style="background:rgba(78,205,196,0.12);border:2px solid rgba(78,205,196,0.4);border-radius:10px;padding:10px 18px;text-align:center;">
+                                <div style="font-family:'Orbitron';font-size:13px;color:#4ECDC4;font-weight:700;">USERS</div>
+                                <div style="font-size:10px;color:var(--muted);margin-top:4px;">id (PK)</div>
+                            </div>
+                            <div style="display:flex;flex-direction:column;align-items:center;gap:2px;">
+                                <div style="font-family:'Fira Code';font-size:10px;color:var(--primary);">1 &mdash;&mdash; N</div>
+                            </div>
+                            <div style="background:rgba(255,107,107,0.12);border:2px solid rgba(255,107,107,0.4);border-radius:10px;padding:10px 18px;text-align:center;">
+                                <div style="font-family:'Orbitron';font-size:13px;color:#FF6B6B;font-weight:700;">ROOM_PLAYERS</div>
+                                <div style="font-size:10px;color:var(--muted);margin-top:4px;">room_id (PK,FK)<br>user_id (PK,FK)<br>joined_at</div>
+                            </div>
+                            <div style="display:flex;flex-direction:column;align-items:center;gap:2px;">
+                                <div style="font-family:'Fira Code';font-size:10px;color:var(--primary);">N &mdash;&mdash; 1</div>
+                            </div>
+                            <div style="background:rgba(108,99,255,0.12);border:2px solid rgba(108,99,255,0.4);border-radius:10px;padding:10px 18px;text-align:center;">
+                                <div style="font-family:'Orbitron';font-size:13px;color:#6C63FF;font-weight:700;">ROOMS</div>
+                                <div style="font-size:10px;color:var(--muted);margin-top:4px;">id (PK)</div>
+                            </div>
+                        </div>
+                        <!-- Explicacion -->
+                        <div style="font-size:11px;color:var(--muted);line-height:1.6;text-align:center;">
+                            <strong style="color:var(--text);">Relacion N:M</strong> &mdash; Un usuario puede estar en muchas salas y una sala tiene muchos jugadores.<br>
+                            La tabla intermedia <span class="ci">room_players</span> resuelve la relacion muchos a muchos con clave primaria compuesta.
+                        </div>
                     </div>
                 </div>
             </div>
