@@ -286,7 +286,9 @@
             <li><span class="idx-n">03</span> Como se conectan los ficheros entre si</li>
             <li><span class="idx-n">04</span> Diseno responsive</li>
             <li><span class="idx-n">05</span> Validacion de formularios con JavaScript</li>
-            <li><span class="idx-n">06</span> Base de datos</li>
+            <li><span class="idx-n">06</span> Backend Go Echo + API REST</li>
+            <li><span class="idx-n">07</span> Base de datos PostgreSQL</li>
+            <li><span class="idx-n">08</span> Despliegue con Docker Compose</li>
         </ul>
     </div>
 
@@ -393,8 +395,20 @@
 │       ├── <span class="f">components/</span>        <span class="c">HUD del juego</span>
 │       └── <span class="f">pages/</span>             <span class="c">10 paginas de la app</span>
 ├── <span class="a">Dockerfile</span>               <span class="c">Build con Node + Nginx</span>
+├── <span class="a">nginx.conf</span>               <span class="c">Proxy /api/* → backend</span>
 ├── <span class="a">vite.config.ts</span>           <span class="c">Config del bundler</span>
-└── <span class="a">package.json</span>             <span class="c">Dependencias del proyecto</span></div>
+└── <span class="a">package.json</span>             <span class="c">Dependencias del proyecto</span>
+
+<span class="f">server/</span>                        <span class="c">Backend Go Echo</span>
+├── <span class="a">main.go</span>                  <span class="c">Rutas y arranque</span>
+├── <span class="f">db/</span><span class="a">db.go</span>                <span class="c">PostgreSQL + migraciones</span>
+├── <span class="f">handlers/</span>
+│   ├── <span class="a">auth.go</span>              <span class="c">Register, Login, Me</span>
+│   └── <span class="a">rooms.go</span>             <span class="c">CRUD de salas</span>
+├── <span class="f">middleware/</span><span class="a">jwt.go</span>       <span class="c">Validacion JWT</span>
+└── <span class="a">Dockerfile</span>               <span class="c">Build Go → Alpine</span>
+
+<span class="a">docker-compose.yml</span>             <span class="c">Orquesta los 3 servicios</span></div>
 
             <div style="display:flex;flex-direction:column;gap:16px;">
                 <div class="card">
@@ -584,66 +598,183 @@
         </div>
     </div>
 
-    <!-- SLIDE 8: BASE DE DATOS -->
+    <!-- SLIDE 8: BACKEND -->
     <div class="slide" data-slide="8">
         <div class="hdr">
-            <div class="hdr-num">06 - DATOS</div>
-            <div class="hdr-title">Base de Datos</div>
-            <div class="hdr-sub">Modelos de datos y como se comunica el frontend con el backend</div>
+            <div class="hdr-num">06 - BACKEND</div>
+            <div class="hdr-title">Servidor Go Echo + PostgreSQL</div>
+            <div class="hdr-sub">API REST propia con autenticacion JWT y gestion de salas</div>
         </div>
         <div class="grid2">
             <div>
                 <div class="card" style="margin-bottom:16px;">
-                    <h3>Como fluyen los datos</h3>
-                    <p style="margin-bottom:10px;">El frontend no guarda datos directamente, todo pasa por el backend:</p>
+                    <h3>Arquitectura del Backend</h3>
+                    <p style="margin-bottom:10px;">Servidor escrito en Go con el framework Echo. Tres capas:</p>
                     <ul>
-                        <li>API REST en <span class="ci">localhost:8080/api</span> para login y perfiles</li>
-                        <li>WebSocket en <span class="ci">localhost:9001</span> para el juego en tiempo real</li>
-                        <li>LocalStorage solo para el nombre del jugador y ajustes</li>
+                        <li><span class="ci">main.go</span> define las rutas y arranca el servidor</li>
+                        <li><span class="ci">handlers/</span> procesa las peticiones HTTP</li>
+                        <li><span class="ci">middleware/</span> valida el token JWT en cada request</li>
+                        <li><span class="ci">db/</span> conexion a PostgreSQL y migracion automatica</li>
                     </ul>
                 </div>
                 <div class="card">
-                    <h3>Modelo: Luchadores (config)</h3>
-                    <table class="dbt">
-                        <tr><th>Campo</th><th>Tipo</th><th>Que es</th></tr>
-                        <tr><td>id</td><td>string</td><td>Identificador unico</td></tr>
-                        <tr><td>name</td><td>string</td><td>Nombre (Blaze, Phantom...)</td></tr>
-                        <tr><td>speed</td><td>number</td><td>Velocidad de movimiento</td></tr>
-                        <tr><td>weight</td><td>number</td><td>Peso (afecta al knockback)</td></tr>
-                        <tr><td>attacks</td><td>object</td><td>6 ataques con dano y angulo</td></tr>
-                    </table>
+                    <h3>Autenticacion JWT</h3>
+                    <ul>
+                        <li>Registro con hash bcrypt de la contrasena</li>
+                        <li>Login devuelve un token JWT (HS256, 24h)</li>
+                        <li>Middleware verifica el token en rutas protegidas</li>
+                        <li>El frontend envia <span class="ci">Authorization: Bearer token</span></li>
+                    </ul>
                 </div>
             </div>
             <div>
                 <div class="card" style="margin-bottom:16px;">
-                    <h3>Modelo: Usuarios</h3>
+                    <h3>API REST - Endpoints</h3>
                     <table class="dbt">
-                        <tr><th>Campo</th><th>Tipo</th><th>Que es</th></tr>
-                        <tr><td>id</td><td>int PK</td><td>ID autoincremental</td></tr>
-                        <tr><td>username</td><td>varchar</td><td>Nombre visible</td></tr>
-                        <tr><td>email</td><td>varchar</td><td>Email unico</td></tr>
-                        <tr><td>password</td><td>varchar</td><td>Hash bcrypt</td></tr>
-                        <tr><td>created_at</td><td>timestamp</td><td>Fecha de registro</td></tr>
+                        <tr><th>Metodo</th><th>Ruta</th><th>Que hace</th></tr>
+                        <tr><td>POST</td><td>/api/auth/register</td><td>Registrar usuario</td></tr>
+                        <tr><td>POST</td><td>/api/auth/login</td><td>Iniciar sesion</td></tr>
+                        <tr><td>GET</td><td>/api/auth/me</td><td>Mi perfil (auth)</td></tr>
+                        <tr><td>POST</td><td>/api/rooms</td><td>Crear sala (auth)</td></tr>
+                        <tr><td>GET</td><td>/api/rooms</td><td>Listar salas publicas</td></tr>
+                        <tr><td>GET</td><td>/api/rooms/:code</td><td>Detalle + jugadores</td></tr>
+                        <tr><td>POST</td><td>/api/rooms/:code/join</td><td>Unirse a sala (auth)</td></tr>
+                        <tr><td>POST</td><td>/api/rooms/:code/leave</td><td>Salir de sala (auth)</td></tr>
                     </table>
                 </div>
                 <div class="card">
-                    <h3>Modelo: Partidas</h3>
-                    <table class="dbt">
-                        <tr><th>Campo</th><th>Tipo</th><th>Que es</th></tr>
-                        <tr><td>room_code</td><td>varchar PK</td><td>Codigo de sala (6 chars)</td></tr>
-                        <tr><td>player1_id</td><td>int FK</td><td>Referencia a usuarios</td></tr>
-                        <tr><td>player2_id</td><td>int FK</td><td>Referencia a usuarios</td></tr>
-                        <tr><td>winner_id</td><td>int FK</td><td>Quien gano</td></tr>
-                        <tr><td>stage</td><td>varchar</td><td>Escenario elegido</td></tr>
-                        <tr><td>played_at</td><td>timestamp</td><td>Cuando se jugo</td></tr>
-                    </table>
+                    <h3>Flujo de datos</h3>
+                    <ul>
+                        <li>Frontend &rarr; Nginx proxy <span class="ci">/api/*</span> &rarr; Backend Go :3000</li>
+                        <li>Backend &rarr; PostgreSQL para persistencia</li>
+                        <li>Todo bajo un unico puerto <span class="ci">:8080</span></li>
+                    </ul>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- SLIDE 9: TECNOLOGIAS + PERSONAJES -->
+    <!-- SLIDE 9: BASE DE DATOS -->
     <div class="slide" data-slide="9">
+        <div class="hdr">
+            <div class="hdr-num">07 - DATOS</div>
+            <div class="hdr-title">Base de Datos PostgreSQL</div>
+            <div class="hdr-sub">3 tablas con relaciones, migracion automatica al arrancar</div>
+        </div>
+        <div class="grid2">
+            <div>
+                <div class="card" style="margin-bottom:16px;">
+                    <h3>Tabla: users</h3>
+                    <table class="dbt">
+                        <tr><th>Campo</th><th>Tipo</th><th>Descripcion</th></tr>
+                        <tr><td>id</td><td>SERIAL PK</td><td>ID autoincremental</td></tr>
+                        <tr><td>username</td><td>VARCHAR(32) UNIQUE</td><td>Nombre de usuario unico</td></tr>
+                        <tr><td>email</td><td>VARCHAR(255) UNIQUE</td><td>Email unico</td></tr>
+                        <tr><td>password_hash</td><td>TEXT</td><td>Contrasena hasheada (bcrypt)</td></tr>
+                        <tr><td>display_name</td><td>VARCHAR(64)</td><td>Nombre visible en el juego</td></tr>
+                        <tr><td>created_at</td><td>TIMESTAMPTZ</td><td>Fecha de registro</td></tr>
+                    </table>
+                </div>
+                <div class="card">
+                    <h3>Tabla: room_players</h3>
+                    <table class="dbt">
+                        <tr><th>Campo</th><th>Tipo</th><th>Descripcion</th></tr>
+                        <tr><td>room_id</td><td>INT FK PK</td><td>Referencia a rooms</td></tr>
+                        <tr><td>user_id</td><td>INT FK PK</td><td>Referencia a users</td></tr>
+                        <tr><td>joined_at</td><td>TIMESTAMPTZ</td><td>Cuando se unio</td></tr>
+                    </table>
+                    <p style="margin-top:10px;">Clave primaria compuesta (room_id, user_id). <span class="ci">ON DELETE CASCADE</span> limpia automaticamente.</p>
+                </div>
+            </div>
+            <div>
+                <div class="card" style="margin-bottom:16px;">
+                    <h3>Tabla: rooms</h3>
+                    <table class="dbt">
+                        <tr><th>Campo</th><th>Tipo</th><th>Descripcion</th></tr>
+                        <tr><td>id</td><td>SERIAL PK</td><td>ID autoincremental</td></tr>
+                        <tr><td>code</td><td>VARCHAR(8) UNIQUE</td><td>Codigo de 6 chars para compartir</td></tr>
+                        <tr><td>host_id</td><td>INT FK</td><td>Creador de la sala</td></tr>
+                        <tr><td>name</td><td>VARCHAR(64)</td><td>Nombre de la sala</td></tr>
+                        <tr><td>max_players</td><td>INT</td><td>Maximo de jugadores (default 2)</td></tr>
+                        <tr><td>is_public</td><td>BOOLEAN</td><td>Visible en el listado</td></tr>
+                        <tr><td>status</td><td>VARCHAR(16)</td><td>waiting / closed</td></tr>
+                        <tr><td>created_at</td><td>TIMESTAMPTZ</td><td>Fecha de creacion</td></tr>
+                    </table>
+                </div>
+                <div class="card">
+                    <h3>Diagrama de relaciones</h3>
+                    <div style="font-family:'Fira Code';font-size:12px;color:var(--muted);line-height:1.8;">
+                        <span style="color:#4ECDC4;">users</span> <span style="color:var(--primary);">1 ──── N</span> <span style="color:#4ECDC4;">room_players</span> <span style="color:var(--primary);">N ──── 1</span> <span style="color:#4ECDC4;">rooms</span><br>
+                        <span style="color:#4ECDC4;">users</span> <span style="color:var(--primary);">1 ──── N</span> <span style="color:#4ECDC4;">rooms</span> <span style="color:var(--muted);">(host_id)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SLIDE 10: DOCKER -->
+    <div class="slide" data-slide="10">
+        <div class="hdr">
+            <div class="hdr-num">08 - DESPLIEGUE</div>
+            <div class="hdr-title">Docker Compose</div>
+            <div class="hdr-sub">Un solo comando para levantar todo: <span class="ci">docker compose up --build -d</span></div>
+        </div>
+        <div class="grid2">
+            <div>
+                <div class="dia" style="margin-bottom:16px;">
+                    <div class="dia-label">Arquitectura de servicios</div>
+                    <div class="dia-row">
+                        <div class="dia-box hl" style="min-width:180px;">Frontend<small>Nginx :8080</small></div>
+                        <div class="dia-arr">&#8594;</div>
+                        <div class="dia-box gr" style="min-width:180px;">Backend<small>Go Echo :3000</small></div>
+                        <div class="dia-arr">&#8594;</div>
+                        <div class="dia-box rd" style="min-width:180px;">PostgreSQL<small>:5432</small></div>
+                    </div>
+                    <div class="dia-down">&#8593;</div>
+                    <div style="text-align:center;font-size:12px;color:var(--muted);">Nginx hace proxy de /api/* al backend</div>
+                </div>
+                <div class="card">
+                    <h3>Builds multi-stage</h3>
+                    <ul>
+                        <li><strong style="color:var(--text);">Frontend:</strong> Node.js compila Svelte &rarr; Nginx sirve los archivos estaticos (~30MB)</li>
+                        <li><strong style="color:var(--text);">Backend:</strong> Go compila un binario estatico &rarr; Alpine lo ejecuta (~15MB)</li>
+                        <li>Imagenes minimas, arranque en segundos</li>
+                    </ul>
+                </div>
+            </div>
+            <div>
+                <div class="card" style="margin-bottom:16px;">
+                    <h3>3 Servicios</h3>
+                    <table class="dbt">
+                        <tr><th>Servicio</th><th>Imagen</th><th>Puerto</th></tr>
+                        <tr><td>db</td><td>postgres:16-alpine</td><td>5432</td></tr>
+                        <tr><td>backend</td><td>golang &rarr; alpine</td><td>3000</td></tr>
+                        <tr><td>frontend</td><td>node &rarr; nginx</td><td>8080</td></tr>
+                    </table>
+                </div>
+                <div class="card" style="margin-bottom:16px;">
+                    <h3>Dependencias</h3>
+                    <ul>
+                        <li>Backend espera a que PostgreSQL este <span class="ci">healthy</span></li>
+                        <li>Health check con <span class="ci">pg_isready</span> cada 5 segundos</li>
+                        <li>Volumen persistente <span class="ci">pgdata</span> para no perder datos</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3>Seguridad</h3>
+                    <ul>
+                        <li>Contrasenas hasheadas con bcrypt (coste 10)</li>
+                        <li>JWT con firma HS256 y expiracion 24h</li>
+                        <li>Constraints UNIQUE en username y email</li>
+                        <li>Foreign keys con ON DELETE CASCADE</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SLIDE 11: TECNOLOGIAS + PERSONAJES -->
+    <div class="slide" data-slide="11">
         <div class="hdr">
             <div class="hdr-num">STACK</div>
             <div class="hdr-title">Tecnologias y Personajes</div>
@@ -657,6 +788,9 @@
             <div class="badge"><span class="dot" style="background:#2496ED;"></span>Docker</div>
             <div class="badge"><span class="dot" style="background:#4ECDC4;"></span>WebSocket</div>
             <div class="badge"><span class="dot" style="background:#009639;"></span>Nginx</div>
+            <div class="badge"><span class="dot" style="background:#00ADD8;"></span>Go Echo</div>
+            <div class="badge"><span class="dot" style="background:#336791;"></span>PostgreSQL 16</div>
+            <div class="badge"><span class="dot" style="background:#F7DF1E;"></span>JWT + bcrypt</div>
         </div>
         <div class="grid3">
             <div class="card">
@@ -697,8 +831,8 @@
         </div>
     </div>
 
-    <!-- SLIDE 10: GRACIAS -->
-    <div class="slide" data-slide="10">
+    <!-- SLIDE 12: GRACIAS -->
+    <div class="slide" data-slide="12">
         <div class="portada">
             <div style="font-family:'Orbitron';font-size:56px;font-weight:900;background:linear-gradient(135deg,#6C63FF,#4ECDC4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:16px;">
                 Gracias!
@@ -720,7 +854,7 @@
 
 <div class="nav-bar">
     <button class="nav-btn" id="prevBtn" onclick="prevSlide()" disabled>&#8592; Anterior</button>
-    <span class="slide-counter" id="slideCounter">1 / 11</span>
+    <span class="slide-counter" id="slideCounter">1 / 13</span>
     <button class="nav-btn" id="nextBtn" onclick="nextSlide()">Siguiente &#8594;</button>
 </div>
 
