@@ -9,3 +9,17 @@ body,
   height: 100dvh;
   overflow: hidden;
 }
+
+/* Landscape mobile: very limited height */
+@media (max-height: 500px) {
+  .landscape-compact {
+    gap: 0.5rem !important;
+    padding-top: 0.5rem !important;
+    padding-bottom: 0.5rem !important;
+  }
+
+  .landscape-scroll {
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}

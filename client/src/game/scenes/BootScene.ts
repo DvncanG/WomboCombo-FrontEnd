@@ -86,6 +86,8 @@ export class BootScene extends Phaser.Scene {
     a.create({ key: "phantom_jump",    frames: a.generateFrameNumbers("g2_jump",    { start: 0, end: 9  }), frameRate: 12, repeat: 0  });
     a.create({ key: "phantom_fall",    frames: a.generateFrameNumbers("g2_jump",    { start: 5, end: 9  }), frameRate: 8,  repeat: -1 });
     a.create({ key: "phantom_attack",  frames: a.generateFrameNumbers("g2_attack1", { start: 0, end: 5  }), frameRate: 16, repeat: 0  });
+    a.create({ key: "phantom_light2", frames: a.generateFrameNumbers("g2_attack2", { start: 0, end: 3  }), frameRate: 18, repeat: 0  });
+    a.create({ key: "phantom_light3", frames: a.generateFrameNumbers("g2_attack3", { start: 0, end: 5  }), frameRate: 18, repeat: 0  });
     a.create({ key: "phantom_heavy",   frames: a.generateFrameNumbers("g2_attack2", { start: 0, end: 3  }), frameRate: 12, repeat: 0  });
     a.create({ key: "phantom_special", frames: a.generateFrameNumbers("g2_attack3", { start: 0, end: 5  }), frameRate: 14, repeat: 0  });
     a.create({ key: "phantom_hurt",    frames: a.generateFrameNumbers("g2_hurt",    { start: 0, end: 3  }), frameRate: 10, repeat: 0  });
