@@ -45,18 +45,18 @@
   }
 </script>
 
-<div class="flex flex-col items-center justify-center h-full gap-8">
-  <h2 class="text-3xl font-bold">Online Multiplayer</h2>
+<div class="flex flex-col items-center justify-center h-full gap-4 sm:gap-6 md:gap-8 p-4 landscape-compact landscape-scroll">
+  <h2 class="text-2xl sm:text-3xl font-bold">Online Multiplayer</h2>
 
   <!-- Name input -->
-  <div class="flex flex-col gap-1 w-80">
+  <div class="flex flex-col gap-1 w-full max-w-64 sm:max-w-80">
     <label class="text-sm text-gray-400">Your name</label>
     <input
       type="text"
       placeholder="Player name"
       bind:value={playerName}
       maxlength="16"
-      class="bg-gray-800 border border-gray-600 rounded-lg px-4 py-2 focus:outline-none focus:border-blue-500"
+      class="bg-gray-800 border border-gray-600 rounded-lg px-4 py-2 focus:outline-none focus:border-blue-500 text-sm sm:text-base"
     />
   </div>
 
@@ -64,9 +64,9 @@
     <p class="text-red-400 text-sm">{error}</p>
   {/if}
 
-  <div class="flex flex-col gap-4 w-80">
+  <div class="flex flex-col gap-3 sm:gap-4 w-full max-w-64 sm:max-w-80">
     <button
-      class="bg-green-600 hover:bg-green-500 text-white font-bold py-3 rounded-lg transition-colors"
+      class="bg-green-600 hover:bg-green-500 text-white font-bold py-2.5 sm:py-3 rounded-lg transition-colors"
       onclick={createRoom}
       disabled={connecting}
     >
@@ -85,10 +85,10 @@
         placeholder="Room code"
         bind:value={joinCode}
         maxlength="8"
-        class="bg-gray-800 border border-gray-600 rounded-lg px-4 py-3 flex-1 uppercase tracking-widest focus:outline-none focus:border-blue-500"
+        class="bg-gray-800 border border-gray-600 rounded-lg px-3 sm:px-4 py-2.5 sm:py-3 flex-1 uppercase tracking-widest focus:outline-none focus:border-blue-500 text-sm sm:text-base"
       />
       <button
-        class="bg-blue-600 hover:bg-blue-500 text-white font-bold px-6 rounded-lg transition-colors"
+        class="bg-blue-600 hover:bg-blue-500 text-white font-bold px-4 sm:px-6 rounded-lg transition-colors"
         onclick={joinRoom}
         disabled={connecting}
       >

@@ -43,17 +43,17 @@
   }
 </script>
 
-<div class="flex flex-col items-center justify-center h-full gap-6">
+<div class="flex flex-col items-center justify-center h-full gap-3 sm:gap-4 md:gap-6 p-4 landscape-compact landscape-scroll">
   <!-- Room code (shareable) -->
   <div class="text-center">
-    <h2 class="text-2xl font-bold mb-2">Room</h2>
+    <h2 class="text-xl sm:text-2xl font-bold mb-1 sm:mb-2">Room</h2>
     {#if lobby.room}
       <div class="flex items-center gap-2 justify-center">
-        <span class="bg-gray-700 px-5 py-2 rounded-lg font-mono text-2xl tracking-widest text-yellow-300">
+        <span class="bg-gray-700 px-4 sm:px-5 py-1.5 sm:py-2 rounded-lg font-mono text-xl sm:text-2xl tracking-widest text-yellow-300">
           {lobby.room.joinCode}
         </span>
         <button
-          class="text-gray-400 hover:text-white text-sm bg-gray-700 px-3 py-2 rounded-lg"
+          class="text-gray-400 hover:text-white text-sm bg-gray-700 px-3 py-1.5 sm:py-2 rounded-lg"
           onclick={copyCode}
           title="Copy code"
         >
@@ -64,61 +64,64 @@
     {/if}
   </div>
 
-  <!-- Player list -->
-  <div class="bg-gray-800 rounded-xl p-4 w-96">
-    <h3 class="text-sm text-gray-400 mb-3">Players ({lobby.players.length}/2)</h3>
-    {#if lobby.players.length === 0}
-      <p class="text-gray-500 text-sm italic">Waiting for players to connect...</p>
-    {:else}
-      {#each lobby.players as player}
-        <div class="flex justify-between items-center py-2 border-b border-gray-700 last:border-0">
-          <span class="font-medium">{player.name}</span>
-          <span class={`text-sm font-bold ${player.ready ? "text-green-400" : "text-gray-500"}`}>
-            {player.ready ? "READY" : "Not ready"}
-          </span>
+  <!-- Main content: side-by-side on wider screens -->
+  <div class="flex flex-col md:flex-row gap-3 sm:gap-4 w-full max-w-2xl">
+    <!-- Player list -->
+    <div class="bg-gray-800 rounded-xl p-3 sm:p-4 w-full md:w-1/2">
+      <h3 class="text-sm text-gray-400 mb-2 sm:mb-3">Players ({lobby.players.length}/2)</h3>
+      {#if lobby.players.length === 0}
+        <p class="text-gray-500 text-sm italic">Waiting for players to connect...</p>
+      {:else}
+        {#each lobby.players as player}
+          <div class="flex justify-between items-center py-2 border-b border-gray-700 last:border-0">
+            <span class="font-medium text-sm sm:text-base">{player.name}</span>
+            <span class={`text-sm font-bold ${player.ready ? "text-green-400" : "text-gray-500"}`}>
+              {player.ready ? "READY" : "Not ready"}
+            </span>
+          </div>
+        {/each}
+      {/if}
+
+      {#if allReady}
+        <div class="mt-2 sm:mt-3 text-center text-green-400 text-sm animate-pulse font-bold">
+          Both players ready! Starting...
         </div>
-      {/each}
-    {/if}
-
-    {#if allReady}
-      <div class="mt-3 text-center text-green-400 text-sm animate-pulse font-bold">
-        Both players ready! Starting...
-      </div>
-    {/if}
-  </div>
-
-  <!-- Chat -->
-  <div class="bg-gray-800 rounded-xl p-3 w-96 h-36 flex flex-col">
-    <div class="flex-1 overflow-y-auto text-sm space-y-1 mb-2 pr-1">
-      {#each lobby.chatMessages as msg}
-        <p><span class="text-blue-400 font-medium">{msg.name}:</span> {msg.message}</p>
-      {/each}
+      {/if}
     </div>
-    <div class="flex gap-2">
-      <input
-        type="text"
-        placeholder="Chat..."
-        bind:value={chatInput}
-        class="bg-gray-700 rounded px-3 py-1 flex-1 text-sm focus:outline-none"
-        onkeydown={(e: KeyboardEvent) => e.key === "Enter" && sendChat()}
-      />
-      <button
-        class="bg-gray-600 hover:bg-gray-500 px-3 py-1 rounded text-sm"
-        onclick={sendChat}
-      >Send</button>
+
+    <!-- Chat -->
+    <div class="bg-gray-800 rounded-xl p-3 w-full md:w-1/2 h-28 sm:h-36 flex flex-col">
+      <div class="flex-1 overflow-y-auto text-sm space-y-1 mb-2 pr-1">
+        {#each lobby.chatMessages as msg}
+          <p><span class="text-blue-400 font-medium">{msg.name}:</span> {msg.message}</p>
+        {/each}
+      </div>
+      <div class="flex gap-2">
+        <input
+          type="text"
+          placeholder="Chat..."
+          bind:value={chatInput}
+          class="bg-gray-700 rounded px-3 py-1 flex-1 text-sm focus:outline-none"
+          onkeydown={(e: KeyboardEvent) => e.key === "Enter" && sendChat()}
+        />
+        <button
+          class="bg-gray-600 hover:bg-gray-500 px-3 py-1 rounded text-sm"
+          onclick={sendChat}
+        >Send</button>
+      </div>
     </div>
   </div>
 
   <!-- Actions -->
   <div class="flex gap-3">
     <button
-      class="bg-gray-600 hover:bg-gray-500 text-white py-2 px-6 rounded-lg transition-colors"
+      class="bg-gray-600 hover:bg-gray-500 text-white py-2 px-4 sm:px-6 rounded-lg transition-colors text-sm sm:text-base"
       onclick={leaveRoom}
     >
       Leave
     </button>
     <button
-      class={`font-bold py-2 px-8 rounded-lg transition-colors ${
+      class={`font-bold py-2 px-6 sm:px-8 rounded-lg transition-colors text-sm sm:text-base ${
         isReady
           ? "bg-yellow-600 hover:bg-yellow-500"
           : "bg-green-600 hover:bg-green-500"

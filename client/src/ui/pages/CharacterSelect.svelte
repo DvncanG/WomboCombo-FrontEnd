@@ -46,6 +46,23 @@
     ].join("; ");
   }
 
+  /** Smaller sprite for mobile */
+  function spriteStyleSmall(config: FighterConfig): string {
+    const displayH = 64;
+    const displayW = 64;
+    const scaleFactor = displayH / 128;
+    const totalW = config.idleFrames * 128 * scaleFactor;
+    return [
+      `width: ${displayW}px`,
+      `height: ${displayH}px`,
+      `background-image: url('/${config.previewSprite}')`,
+      `background-size: ${totalW}px ${displayH}px`,
+      `background-position: 0 0`,
+      `background-repeat: no-repeat`,
+      `image-rendering: pixelated`,
+    ].join("; ");
+  }
+
   onMount(() => {
     gameStore.phase = "character_select";
 
@@ -152,24 +169,24 @@
   }
 </script>
 
-<div class="flex flex-col items-center justify-center h-full gap-6 p-8">
-  <h1 class="text-4xl font-bold tracking-tight">
+<div class="flex flex-col items-center justify-center h-full gap-3 sm:gap-4 md:gap-6 p-4 sm:p-6 md:p-8 landscape-compact landscape-scroll">
+  <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight">
     SELECT YOUR <span class="text-red-500">FIGHTER</span>
   </h1>
 
-  <div class="text-sm text-gray-500">
+  <div class="text-xs sm:text-sm text-gray-500">
     Press <span class="text-gray-300">TAB</span> to toggle {isCPU ? "2P mode" : "CPU mode"}
   </div>
 
   <!-- Fighter cards -->
-  <div class="flex gap-6 justify-center flex-wrap">
+  <div class="flex gap-3 sm:gap-4 md:gap-6 justify-center flex-wrap">
     {#each fighterList as fighterId, idx}
       {@const config = FIGHTERS[fighterId]}
       {@const isP1 = idx === p1Selection}
       {@const isP2 = idx === p2Selection}
       <!-- svelte-ignore a11y_no_static_element_interactions -->
       <div
-        class="relative w-52 rounded-xl p-4 transition-all duration-200 cursor-pointer"
+        class="relative w-36 sm:w-44 md:w-52 rounded-xl p-3 sm:p-4 transition-all duration-200 cursor-pointer"
         style="background: {isP1 || isP2 ? 'rgba(255,255,255,0.08)' : 'rgba(255,255,255,0.03)'};
                border: 3px solid {isP1 ? '#4488ff' : isP2 ? '#ff4444' : 'transparent'};
                transform: scale({isP1 || isP2 ? 1.05 : 1})"
@@ -178,7 +195,7 @@
         }}
       >
         <!-- Selection indicators -->
-        <div class="flex justify-between mb-2">
+        <div class="flex justify-between mb-1 sm:mb-2">
           {#if isP1}
             <span class="text-xs font-bold text-blue-400 bg-blue-400/20 px-2 py-0.5 rounded">P1</span>
           {:else}
@@ -190,33 +207,35 @@
         </div>
 
         <!-- Fighter preview — first frame of idle spritesheet -->
-        <div class="flex justify-center mb-3">
-          <div style="{spriteStyle(config)}"></div>
+        <div class="flex justify-center mb-2 sm:mb-3">
+          <!-- Small sprite on mobile, normal on desktop -->
+          <div class="hidden sm:block" style="{spriteStyle(config)}"></div>
+          <div class="block sm:hidden" style="{spriteStyleSmall(config)}"></div>
         </div>
 
         <!-- Name -->
-        <h3 class="text-xl font-bold text-center" style="color: {colorHex(config.color)}">
+        <h3 class="text-base sm:text-lg md:text-xl font-bold text-center" style="color: {colorHex(config.color)}">
           {config.name}
         </h3>
-        <p class="text-xs text-gray-500 text-center mt-1 h-8">{config.description}</p>
+        <p class="text-xs text-gray-500 text-center mt-1 h-6 sm:h-8 line-clamp-2">{config.description}</p>
 
         <!-- Stats -->
-        <div class="mt-3 space-y-1.5">
+        <div class="mt-2 sm:mt-3 space-y-1 sm:space-y-1.5">
           <div class="flex items-center gap-2">
-            <span class="text-xs text-gray-500 w-12">SPD</span>
-            <div class="flex-1 h-2 bg-gray-800 rounded-full overflow-hidden">
+            <span class="text-xs text-gray-500 w-10 sm:w-12">SPD</span>
+            <div class="flex-1 h-1.5 sm:h-2 bg-gray-800 rounded-full overflow-hidden">
               <div class="h-full bg-yellow-500 rounded-full" style="width: {statBar(config.speed, 400)}%"></div>
             </div>
           </div>
           <div class="flex items-center gap-2">
-            <span class="text-xs text-gray-500 w-12">PWR</span>
-            <div class="flex-1 h-2 bg-gray-800 rounded-full overflow-hidden">
+            <span class="text-xs text-gray-500 w-10 sm:w-12">PWR</span>
+            <div class="flex-1 h-1.5 sm:h-2 bg-gray-800 rounded-full overflow-hidden">
               <div class="h-full bg-red-500 rounded-full" style="width: {statBar(config.attacks.heavy.damage, 28)}%"></div>
             </div>
           </div>
           <div class="flex items-center gap-2">
-            <span class="text-xs text-gray-500 w-12">WGT</span>
-            <div class="flex-1 h-2 bg-gray-800 rounded-full overflow-hidden">
+            <span class="text-xs text-gray-500 w-10 sm:w-12">WGT</span>
+            <div class="flex-1 h-1.5 sm:h-2 bg-gray-800 rounded-full overflow-hidden">
               <div class="h-full bg-blue-500 rounded-full" style="width: {statBar(config.weight, 170)}%"></div>
             </div>
           </div>
@@ -226,34 +245,34 @@
   </div>
 
   <!-- Ready status -->
-  <div class="flex gap-12 mt-4">
+  <div class="flex gap-6 sm:gap-8 md:gap-12 mt-1 sm:mt-2 md:mt-4">
     <div class="text-center">
-      <div class="text-sm text-gray-500 mb-1">{settings.playerName || "Player 1"}</div>
+      <div class="text-xs sm:text-sm text-gray-500 mb-0.5 sm:mb-1">{settings.playerName || "Player 1"}</div>
       {#if p1Ready}
-        <div class="text-green-400 font-bold text-lg">READY!</div>
+        <div class="text-green-400 font-bold text-sm sm:text-lg">READY!</div>
       {:else}
-        <div class="text-gray-500 text-sm">A/D to select, F to confirm</div>
+        <div class="text-gray-500 text-xs sm:text-sm">A/D to select, F to confirm</div>
       {/if}
     </div>
     <div class="text-center">
-      <div class="text-sm text-gray-500 mb-1">{isCPU ? "CPU" : "Player 2"}</div>
+      <div class="text-xs sm:text-sm text-gray-500 mb-0.5 sm:mb-1">{isCPU ? "CPU" : "Player 2"}</div>
       {#if p2Ready || isCPU}
-        <div class="text-green-400 font-bold text-lg">READY!</div>
+        <div class="text-green-400 font-bold text-sm sm:text-lg">READY!</div>
       {:else}
-        <div class="text-gray-500 text-sm">Arrows to select, J to confirm</div>
+        <div class="text-gray-500 text-xs sm:text-sm">Arrows to select, J to confirm</div>
       {/if}
     </div>
   </div>
 
   <!-- Countdown -->
   {#if countdown > 0}
-    <div class="text-5xl font-bold text-yellow-400 animate-pulse">
+    <div class="text-3xl sm:text-4xl md:text-5xl font-bold text-yellow-400 animate-pulse">
       {countdown}
     </div>
   {/if}
 
   <button
-    class="text-gray-600 hover:text-gray-400 text-sm mt-2"
+    class="text-gray-600 hover:text-gray-400 text-xs sm:text-sm mt-1 sm:mt-2"
     onclick={() => router.navigate("landing")}
   >
     Back to Menu
