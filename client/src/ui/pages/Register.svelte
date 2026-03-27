@@ -1,5 +1,7 @@
 <script lang="ts">
   import { router } from "../../lib/stores/router.svelte";
+  import { auth } from "../../lib/stores/auth.svelte";
+  import { api } from "../../lib/api/client";
 
   let username = $state("");
   let email = $state("");
@@ -11,9 +13,9 @@
     error = "";
     loading = true;
     try {
-      // TODO: api.post("/auth/register", { username, email, password });
-      console.log("[Register] Placeholder:", username, email);
-      router.navigate("login");
+      const res = await api.post<{ token: string; user: any }>("/auth/register", { username, email, password });
+      auth.setAuth(res.token, res.user);
+      router.navigate("lobby");
     } catch (e) {
       error = e instanceof Error ? e.message : "Registration failed";
     } finally {

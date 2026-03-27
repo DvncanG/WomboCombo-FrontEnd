@@ -1,5 +1,14 @@
 <script lang="ts">
   import { router } from "../../lib/stores/router.svelte";
+  import { auth } from "../../lib/stores/auth.svelte";
+
+  function goOnline() {
+    if (auth.isAuthenticated) {
+      router.navigate("lobby");
+    } else {
+      router.navigate("login");
+    }
+  }
 </script>
 
 <div class="flex flex-col items-center justify-center h-full gap-8">
@@ -21,7 +30,7 @@
 
     <button
       class="bg-blue-700 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg transition-colors"
-      onclick={() => router.navigate("login")}
+      onclick={goOnline}
     >
       Online Multiplayer
     </button>
@@ -33,6 +42,10 @@
       Settings
     </button>
   </div>
+
+  {#if auth.isAuthenticated}
+    <p class="text-gray-500 text-sm">Logged in as <span class="text-gray-300">{auth.user?.username}</span></p>
+  {/if}
 
   <div class="text-gray-600 text-xs mt-4 text-center space-y-0.5">
     <p>P1: WASD + F (light) · G (heavy) · R (special)</p>

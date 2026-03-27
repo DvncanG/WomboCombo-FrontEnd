@@ -1,6 +1,7 @@
 <script lang="ts">
   import { router } from "../../lib/stores/router.svelte";
   import { auth } from "../../lib/stores/auth.svelte";
+  import { api } from "../../lib/api/client";
 
   let email = $state("");
   let password = $state("");
@@ -12,17 +13,8 @@
     loading = true;
 
     try {
-      // TODO: Replace with real API call
-      // const res = await api.post<LoginResponse>("/auth/login", { email, password });
-      // auth.setAuth(res.token, res.refresh_token, res.player);
-
-      // Placeholder: fake login
-      auth.setAuth("fake-token", "fake-refresh", {
-        id: "p1",
-        username: email.split("@")[0] || "Player",
-        email,
-      });
-
+      const res = await api.post<{ token: string; user: any }>("/auth/login", { email, password });
+      auth.setAuth(res.token, res.user);
       router.navigate("lobby");
     } catch (e) {
       error = e instanceof Error ? e.message : "Login failed";
