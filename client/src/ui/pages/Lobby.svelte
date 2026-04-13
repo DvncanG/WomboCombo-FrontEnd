@@ -7,14 +7,14 @@
   import { settings } from "../../lib/stores/settings.svelte";
 
   let joinCode = $state("");
-  let playerName = $state(settings.playerName || localStorage.getItem("wonbo_name") || "Player");
+  let playerName = $state(settings.playerName || localStorage.getItem("wombo_name") || "Player");
   let error = $state("");
   let connecting = $state(false);
 
   const WS_URL = import.meta.env.VITE_WS_URL ?? "ws://localhost:9001";
 
   function saveName() {
-    localStorage.setItem("wonbo_name", playerName.trim() || "Player");
+    localStorage.setItem("wombo_name", playerName.trim() || "Player");
   }
 
   function createRoom() {

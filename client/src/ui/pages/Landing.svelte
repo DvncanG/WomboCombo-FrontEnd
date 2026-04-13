@@ -5,8 +5,8 @@
 <div class="flex flex-col items-center justify-center h-full gap-4 sm:gap-6 md:gap-8 p-4 landscape-compact landscape-scroll">
   <div class="text-center">
     <h1 class="text-4xl sm:text-5xl md:text-7xl font-black tracking-tight">
-      WONBO
-      <span class="text-red-500">KOMBO</span>
+      WOMBO
+      <span class="text-red-500">COMBO</span>
     </h1>
     <p class="text-gray-400 text-sm sm:text-lg mt-1 sm:mt-2 tracking-wide">Platform Fighter</p>
     <div class="flex gap-2 justify-center mt-2 sm:mt-3 flex-wrap">
