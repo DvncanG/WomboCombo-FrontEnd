@@ -1,4 +1,4 @@
-# WomboCombo-FrontEnd/Dockerfile
+# WomboKombo-FrontEnd/Dockerfile
 FROM node:20-alpine AS build
 WORKDIR /app
 COPY client/package*.json ./

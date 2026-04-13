@@ -24,35 +24,35 @@
   }
 </script>
 
-<div class="flex flex-col items-center justify-center h-full gap-6">
-  <h2 class="text-3xl font-bold">Create Account</h2>
+<div class="flex flex-col items-center justify-center h-full gap-4 sm:gap-6 p-4 landscape-compact landscape-scroll">
+  <h2 class="text-2xl sm:text-3xl font-bold">Create Account</h2>
 
   {#if error}
     <p class="text-red-400 text-sm">{error}</p>
   {/if}
 
-  <div class="flex flex-col gap-4 w-80">
+  <div class="flex flex-col gap-3 sm:gap-4 w-full max-w-64 sm:max-w-80">
     <input
       type="text"
       placeholder="Username"
       bind:value={username}
-      class="bg-gray-800 border border-gray-600 rounded-lg px-4 py-3 focus:outline-none focus:border-blue-500"
+      class="bg-gray-800 border border-gray-600 rounded-lg px-4 py-2.5 sm:py-3 focus:outline-none focus:border-blue-500 text-sm sm:text-base"
     />
     <input
       type="email"
       placeholder="Email"
       bind:value={email}
-      class="bg-gray-800 border border-gray-600 rounded-lg px-4 py-3 focus:outline-none focus:border-blue-500"
+      class="bg-gray-800 border border-gray-600 rounded-lg px-4 py-2.5 sm:py-3 focus:outline-none focus:border-blue-500 text-sm sm:text-base"
     />
     <input
       type="password"
       placeholder="Password"
       bind:value={password}
-      class="bg-gray-800 border border-gray-600 rounded-lg px-4 py-3 focus:outline-none focus:border-blue-500"
+      class="bg-gray-800 border border-gray-600 rounded-lg px-4 py-2.5 sm:py-3 focus:outline-none focus:border-blue-500 text-sm sm:text-base"
     />
 
     <button
-      class="bg-blue-600 hover:bg-blue-500 disabled:bg-gray-600 text-white font-bold py-3 rounded-lg transition-colors"
+      class="bg-blue-600 hover:bg-blue-500 disabled:bg-gray-600 text-white font-bold py-2.5 sm:py-3 rounded-lg transition-colors"
       disabled={loading || !username || !email || !password}
       onclick={handleRegister}
     >
